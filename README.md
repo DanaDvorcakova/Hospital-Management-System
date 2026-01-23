@@ -354,11 +354,8 @@ Instructions on how to deploy and access the web app on Render.com
 
 Setup and Installation instructions
 1. Clone the repository:
-   git clone </MyCode//repos/ (main)>
-   cd your-project
-
-git clone <your-github-repo-url>
-cd hospital-management-system
+git clone < https://github.com/DanaDvorcakova/Hospital-Management-System.git>   
+cd Hospital-Management-System
 
 2. Create a virtual environment:
 python -m venv .venv
