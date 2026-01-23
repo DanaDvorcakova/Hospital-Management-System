@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Centered Edit Doctor Form -->
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+
+         <!-- Card to Display Edit Doctor Form -->
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-header" style="background-color: #ffc107; color: white;"> <!-- Yellow-Orange background -->
+                <h4 class="mb-0">Edit Doctor</h4>
+            </div>
+
+            <div class="card-body">
+                <form method="POST">
+                    <!-- Doctor's Details -->
+                    <div class="mb-3">
+                        <label class="form-label">Doctor Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ doctor.name }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Specialization</label>
+                        <input type="text" name="specialization" class="form-control" value="{{ doctor.specialization }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="phone" class="form-control" value="{{ doctor.phone }}" required>
+                    </div>
+
+                    <!-- Action Buttons (Cancel and Update) -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin_doctors') }}" class="btn btn-secondary">
+                            Cancel
+                        </a>
+                        <!-- Action Buttons -->
+                        <button type="submit" class="btn" style="background-color: #ffc107; color: black;">
+                            Update Doctor
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+

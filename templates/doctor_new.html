@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Add New Doctor{% endblock %}
+
+{% block content %}
+<!-- Centered Form for Adding a New Doctor -->
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h2 class="mb-4">Add New Doctor</h2>
+
+        <!-- Form for Adding a Doctor details -->
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Specialization</label>
+                <input type="text" name="specialization" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" required>
+            </div>
+             <!-- Submit Button -->
+            <button class="btn btn-success w-100">Add Doctor</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

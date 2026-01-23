@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MedicalCare Clinic{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navbar with dynamic links based on user role -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <img src="https://cdn-icons-png.flaticon.com/256/6890/6890395.png" width="50" height="50" alt="MedicalCare Logo">
+            <a class="navbar-brand" href="{{ url_for('index') }}">MedicalCare</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if session.get('user_id') %}
+                <ul class="navbar-nav me-auto">
+                    {% if session.get('role') == 'admin' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_index') }}">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_doctors') }}">Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_patients') }}">Patients</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_audit') }}">Audit Log</a></li>
+                    {% elif session.get('role') == 'doctor' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('doctor_appointments') }}">Appointments</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('doctor_view_patient_list') }}">Patients</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('doctor_records') }}">Medical Records</a></li>
+                    {% elif session.get('role') == 'patient' %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('patient_appointments') }}">My Appointments</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('patient_records') }}">My Records</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('patient_index') }}">Profile</a></li>
+
+                    {% endif %}
+                </ul>
+                <span class="navbar-text me-3">
+                    Logged in as: <strong>{{ session.get('username') }}</strong> ({{ session.get('role') }})
+                </span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+                {% else %}
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="container my-4 flex-grow-1">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    {% set alert_class = category if category in ['success','warning','danger'] else 'info' %}
+                    <div class="alert alert-{{ alert_class }} alert-dismissible fade show" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center py-3 mt-auto">
+        &copy; {{ current_year }} MedicalCare. All rights reserved.
+    </footer>
+</div>
+
+<!-- Unified Modal for Delete / Cancel / Other Confirm Actions -->
+<div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmActionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="confirmActionLabel">Confirm Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="confirmActionBody">
+        Are you sure you want to perform this action?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="#" id="confirmActionBtn" class="btn btn-danger">Yes, Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+
+{% block scripts %}
+   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% endblock %}
+
+</body>
+</html>
+
+

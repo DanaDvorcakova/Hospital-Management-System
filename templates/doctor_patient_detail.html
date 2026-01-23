@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Patient Details Section -->
+<div class="container mt-5">
+    <h3 class="text-center mb-4">Patient Details</h3>
+
+    <!-- Patient Information Card -->
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Patient Information</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> {{ patient.name }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+            <p><strong>Phone:</strong> {{ patient.phone }}</p>
+        </div>
+    </div>
+
+    <!-- Medical History Section -->
+    <h4 class="mb-3">Medical History</h4>
+
+    <!-- Check if medical records exist -->
+    {% if records %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Diagnosis</th>
+                        <th>Prescription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.appointment.date }}</td>
+                        <td>{{ record.diagnosis }}</td>
+                        <td>{{ record.prescription }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <!-- No medical records available -->
+        <div class="alert alert-info">
+            No medical records found.
+        </div>
+    {% endif %}
+
+    <!-- Back button to return to appointments -->
+  <div class="text-center mt-4">
+     <a href="{{ url_for('doctor_appointments') }}" class="btn btn-success btn-lg">
+        Back to Appointments
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+

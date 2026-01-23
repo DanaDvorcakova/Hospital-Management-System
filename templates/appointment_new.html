@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<!-- Main content section: Book an Appointment form -->
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h2 class="mb-4">Book an Appointment</h2>
+        <form method="POST">
+            <!-- Doctor Selection Dropdown -->
+            <div class="mb-3">
+                <label class="form-label">Select Doctor</label>
+                <select name="doctor_id" class="form-select" required>
+                    <option value="">--Select--</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }} - {{ doctor.specialization }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Date Selection -->
+            <div class="mb-3">
+                <label class="form-label">Date</label>
+                <input 
+                    type="date" 
+                    name="date" 
+                    class="form-control" 
+                    required
+                    min="{{ today }}"
+                >
+            </div>
+             <!-- Time Selection -->
+            <div class="mb-3">
+                <label for="time" class="form-label">Time</label>
+                <input type="time" class="form-control" name="time" required>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="btn btn-primary w-100">Book Appointment</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

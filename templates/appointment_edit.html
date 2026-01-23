@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        
+         <!-- Card Container -->
+        <div class="card shadow">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0">Edit Appointment</h4>
+            </div>
+
+            <div class="card-body">
+                <!-- Edit Appointment Form -->
+                <form method="POST">
+
+                    <!-- Doctor -->
+                    <div class="mb-3">
+                        <label for="doctor" class="form-label">Doctor</label>
+                        <select class="form-select" id="doctor" name="doctor_id" required>
+                            {% for doctor in doctors %}
+                                <option value="{{ doctor.id }}"
+                                    {% if doctor.id == appointment.doctor_id %}selected{% endif %}>
+                                    {{ doctor.name }} - {{ doctor.specialization }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Appointment Date</label>
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="date"
+                            name="date"
+                            value="{{ appointment.date }}"
+                            min="{{ today }}"
+                            required
+                        >
+                    </div>
+
+                    <!-- Time -->
+                    <div class="mb-3">
+                        <label for="time" class="form-label">Appointment Time</label>
+                        <input
+                            type="time"
+                            class="form-control"
+                            id="time"
+                            name="time"
+                            value="{{ appointment.time.strftime('%H:%M') if appointment.time else '' }}"
+                            required
+                        >
+                    </div>
+
+                    <!-- Action Buttons (Cancel and Update) -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('patient_appointments') }}" class="btn btn-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            Update Appointment
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

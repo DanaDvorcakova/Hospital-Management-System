@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Add Medical Record{% endblock %}
+
+{% block content %}
+
+<!-- Page Title and Appointment Details -->
+<h2>Add Medical Record for Appointment #{{ appointment.id }}</h2>
+<p><strong>Patient:</strong> {{ appointment.patient.name }}</p>
+<p><strong>Date:</strong> {{ appointment.date }}</p>
+
+<!-- Medical Record Form -->
+<form method="POST">
+    <!-- Diagnosis Section -->
+    <div class="mb-3">
+        <label for="diagnosis" class="form-label">Diagnosis:</label>
+        <textarea id="diagnosis" name="diagnosis" class="form-control" required></textarea>
+    </div>
+    
+    <!-- Prescription Section -->
+    <div class="mb-3">
+        <label for="prescription" class="form-label">Prescription:</label>
+        <textarea id="prescription" name="prescription" class="form-control" required></textarea>
+    </div>
+
+     <!-- Submit and Cancel Buttons -->
+    <button type="submit" class="btn btn-success">Save Record</button>
+    <a href="{{ url_for('doctor_appointments') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
+

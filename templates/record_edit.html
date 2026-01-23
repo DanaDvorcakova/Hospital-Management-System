@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+
+        <!-- Card Container -->
+        <div class="card shadow">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0">Edit Medical Record</h4>
+            </div>
+
+            <div class="card-body">
+                <!-- Edit Medical Record Form -->
+                <form method="POST">
+
+                    <!-- Diagnosis Field -->
+                    <div class="mb-3">
+                        <label class="form-label">Diagnosis</label>
+                        <textarea name="diagnosis" class="form-control" rows="3" required>{{ record.diagnosis }}</textarea>
+                    </div>
+
+                    <!-- Prescription Field -->
+                    <div class="mb-3">
+                        <label class="form-label">Prescription</label>
+                        <textarea name="prescription" class="form-control" rows="3" required>{{ record.prescription }}</textarea>
+                    </div>
+
+                    <!-- Action Buttons (Cancel and Update) -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('doctor_appointments') }}" class="btn btn-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            Update Record
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

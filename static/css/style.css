@@ -1,0 +1,307 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Page background */
+.login-page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    padding: 5rem 2rem 2rem;
+}
+
+/* Main container */
+.login-container {
+    width: 100%; /* Can be removed since it's already 100% by default */
+}
+
+/* Welcome section */
+.welcome-section {
+    color: #0d6efd;
+    margin-top: 5rem; /* Consider reducing this on small screens */
+}
+
+.welcome-section h2 {
+    font-weight: 600;
+}
+
+.welcome-section p.lead {
+    color: #2f7de1;
+}
+
+/* Login card */
+.login-card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* Maybe make the shadow more subtle */
+    padding: 2rem;
+    max-width: 420px;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Inputs */
+.login-card .form-control {
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+}
+
+.login-card .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.2);
+}
+
+/* Buttons */
+.login-card .btn {
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.65rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-card {
+        max-width: 360px; /* Adjust max-width for better layout */
+        padding: 1.5rem;
+    }
+
+    .welcome-section {
+        margin-top: 3rem; /* Reduce margin-top on small screens */
+    }
+}
+
+/* ------------------ CHART ------------------ */
+/* Chart wrapper for admin dashboard */
+.chart-wrapper {
+  width: 100%;
+  max-width: 700px;   
+  height: 500px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#appointmentChart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Make canvas fill the wrapper */
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+/* ------------------ SEARCH HIGHLIGHT ------------------ */
+mark {
+  background-color: #ffe066;
+  padding: 2px;
+  border-radius: 3px;
+}
+
+
+/* ------------------ CARD STYLES ------------------ */
+/* Shared card styles */
+.date-card,
+.appointments-card,
+.doctors-card,
+.patients-card {
+  border-radius: 15px; 
+  transition: transform 0.2s, box-shadow 0.3s, color 0.3s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); 
+  padding: 20px; 
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+}
+
+/* Hover effect for all cards */
+.card:hover,
+.date-card:hover,
+.appointments-card:hover,
+.doctors-card:hover,
+.patients-card:hover,
+.completed-card:hover,
+.pending-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ------------------ SPECIFIC CARD STYLES ------------------ */
+/* Appointments Card */
+.appointments-card {
+  height: 140px; /* Specific height for appointments card */
+}
+
+/* Completed Card Style */
+.completed-card {
+  background: linear-gradient(135deg, #28a745, #218838); 
+  color: white; 
+}
+
+/* Pending Card Style */
+.pending-card {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: black; 
+}
+
+/* ------------------ FILTERABLE INPUT ------------------ */
+.filterable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px;
+    user-select: none;
+    transition: color 0.2s;
+}
+
+.filterable:hover {
+    color: #0d6efd;
+}
+
+.filterable::after {
+    content: "▼";
+    position: absolute;
+    right: 5px;
+    font-size: 0.7em;
+    color: #888;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.filterable.open::after {
+    transform: rotate(180deg);
+    color: #0d6efd;
+}
+
+/* Filter dropdown */
+.filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    min-width: 200px;
+    max-width: 300px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    font-size: 0.9em;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Animate dropdown in */
+.filter-dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Search input */
+.filter-dropdown input[type="text"] {
+    width: 100%;
+    padding: 5px 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+/* Select All */
+.filter-dropdown label.select-all {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+/* Checkboxes hover effect */
+.filter-dropdown label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.filter-dropdown label:hover {
+    background-color: #f2f6fb;
+}
+
+.filter-dropdown input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #0d6efd; 
+}
+
+@media (max-width: 768px) {
+    .filter-dropdown {
+        min-width: 150px; 
+    }
+}
+
+/* ------------------ PAGINATION ------------------ */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    gap: 1px; 
+    justify-content: center;
+    margin-top: 5px; 
+    font-size: 12px; 
+}
+
+.pagination li {
+    cursor: pointer;
+    padding: 2px 4px; 
+    border: 1px solid #ccc;
+    border-radius: 3px; 
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination li.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.pagination li:hover {
+    background-color: #e0e7ff;
+}
+
+/* Pagination: Disabled state */
+.pagination li.disabled {
+    background-color: #f0f0f0;
+    color: #ccc;
+    cursor: not-allowed;
+    border-color: #ddd;
+}
+
+
+/* ------------------ FOOTER ------------------ */
+.container {
+    flex: 1; /* This allows the content area to expand and push the footer to the bottom */
+}
+
+footer {
+    background-color: #0d6efd; /* Primary color (blue) */
+    color: white;
+    padding: 20px 0; /* Adjust padding as needed */
+    text-align: center;
+}
+
+
+

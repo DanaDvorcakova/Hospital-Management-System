@@ -1,0 +1,34 @@
+<ul class="pagination justify-content-center">
+    <!-- Previous Button -->
+    {% if paginator.has_prev %}
+    <li class="page-item">
+        <a class="page-link" href="{{ url_for(endpoint, page=paginator.prev_num, **query_params) }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link">&laquo;</span>
+    </li>
+    {% endif %}
+
+    <!-- Page Numbers: Loop through the pages -->
+    {% for page_num in paginator.iter_pages() %}
+    <li class="page-item {% if page_num == paginator.page %}active{% endif %}">
+        <a class="page-link" href="{{ url_for(endpoint, page=page_num, **query_params) }}">{{ page_num }}</a>
+    </li>
+    {% endfor %}
+
+    <!-- Next Button -->
+    {% if paginator.has_next %}
+    <li class="page-item">
+        <a class="page-link" href="{{ url_for(endpoint, page=paginator.next_num, **query_params) }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+        <span class="page-link">&raquo;</span>
+    </li>
+    {% endif %}
+</ul>
