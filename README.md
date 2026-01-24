@@ -4,7 +4,8 @@ Hospital Management System
 
 Author: Dana Dvorcakova
 Date:   25/01/2026
-Link:   https://hospital-management-system-2-zpum.onrender.com
+Link Render:   https://hospital-management-system-2-zpum.onrender.com
+Link Github:   https://danadvorcakova.github.io/Hospital-Management-System/
 
 
 OVERVIEW
