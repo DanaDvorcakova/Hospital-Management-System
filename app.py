@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for, session, abort, flash
 from models import User, Doctor, Patient, Appointment, MedicalRecord, AuditLog, db
 from functools import wraps
@@ -92,24 +93,25 @@ def seed_db_if_needed():
             time=time(11, 30),
             status="Pending")
         db.session.add_all([appt1, appt2])
+        db.session.commit()  # Commit the appointments to the database
+
+        # --- Medical Records (after appointments are committed) ---
+        record1 = MedicalRecord(
+            appointment_id=appt1.id,
+            diagnosis="Hypertension",
+            prescription="Indapamide")
+        
+        record2 = MedicalRecord(
+            appointment_id=appt2.id,
+            diagnosis="Migraine",
+            prescription="Tricyclic")
+        db.session.add_all([record1, record2])
         db.session.commit()
 
-    # --- Medical Records ---
-    record1 = MedicalRecord(
-        appointment_id=appt1.id,
-        diagnosis="Hypertension",
-        prescription="Indapamide")
-    
-    record2 = MedicalRecord(
-        appointment_id=appt2.id,
-        diagnosis="Migraine",
-        prescription="Tricyclic")
-    db.session.add_all([record1, record2])
-    db.session.commit()
-
 with app.app_context():
-    db.create_all()
+    db.create_all()  # This is typically used once during setup
     seed_db_if_needed()
+
   
 
 # ===========================9
