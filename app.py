@@ -6,6 +6,101 @@ from datetime import datetime, time, date
 
 
 # ===========================
+# Database Seeding
+# ===========================
+def seed_db_if_needed():
+    """Seeds the database with default admin, doctors, patients, appointments, and medical records."""
+    if not User.query.filter_by(username="admin").first():
+        admin = User(
+            username="admin",
+            password=generate_password_hash("admin123"),
+            role="admin")
+        db.session.add(admin)
+        db.session.commit()
+
+    # --- Doctors ---
+    doctors_to_seed = [
+        {"username": "dr_smith", "name": "Dr. Smith", "specialization": "Cardiology", "phone": "1234567890"},
+        {"username": "dr_jones", "name": "Dr. Jones", "specialization": "Neurology", "phone": "0987654321"},
+    ]
+    for doc in doctors_to_seed:
+        if not User.query.filter_by(username=doc["username"]).first():
+            user = User(
+                username=doc["username"],
+                password=generate_password_hash("123"),
+                role="doctor")
+            db.session.add(user)
+            db.session.commit()
+
+            doctor = Doctor(
+                user_id=user.id,
+                name=doc["name"],
+                specialization=doc["specialization"],
+                phone=doc["phone"])
+            db.session.add(doctor)
+            db.session.commit()
+
+    # --- Patients ---
+    patients_to_seed = [
+        {"username": "alice", "name": "Alice", "age": 30, "gender": "Female", "phone": "0822547896"},
+        {"username": "bob", "name": "Bob", "age": 40, "gender": "Male", "phone": "0248796558"},
+    ]
+    for pat in patients_to_seed:
+        if not User.query.filter_by(username=pat["username"]).first():
+            user = User(
+                username=pat["username"],
+                password=generate_password_hash("123"),
+                role="patient")
+            db.session.add(user)
+            db.session.commit()
+
+            patient = Patient(
+                user_id=user.id,
+                name=pat["name"],
+                age=pat["age"],
+                gender=pat["gender"],
+                phone=pat["phone"])
+            db.session.add(patient)
+            db.session.commit()
+
+    # --- Appointments ---
+    if Appointment.query.count() == 0:
+        doc1 = Doctor.query.filter_by(name="Dr. Smith").first()
+        doc2 = Doctor.query.filter_by(name="Dr. Jones").first()
+        pat1 = Patient.query.filter_by(name="Alice").first()
+        pat2 = Patient.query.filter_by(name="Bob").first()
+
+        appt1 = Appointment(
+            patient_id=pat1.id,
+            doctor_id=doc1.id,
+            date=datetime(2026, 1, 15).date(),
+            time=time(10, 30),
+            status="Pending")
+        
+        appt2 = Appointment(
+            patient_id=pat2.id,
+            doctor_id=doc2.id,
+            date=datetime(2026, 1, 20).date(),
+            time=time(11, 30),
+            status="Pending")
+        db.session.add_all([appt1, appt2])
+        db.session.commit()
+
+    # --- Medical Records ---
+    record1 = MedicalRecord(
+        appointment_id=appt1.id,
+        diagnosis="Hypertension",
+        prescription="Indapamide")
+    
+    record2 = MedicalRecord(
+        appointment_id=appt2.id,
+        diagnosis="Migraine",
+        prescription="Tricyclic")
+    db.session.add_all([record1, record2])
+    db.session.commit()
+
+
+# ===========================
 # Flask App Setup
 # ===========================
 app = Flask(__name__)
@@ -13,12 +108,15 @@ app.config.from_object("config")
 app.secret_key = "supersecretkey"
 db.init_app(app)
 
+# Create tables and seed the database if needed
 with app.app_context():
     db.create_all()
     print("✅ Tables created successfully")
+    seed_db_if_needed()
+    print("✅ Database seeded with initial data")
 
 
-# ===========================9
+# ===========================
 # Context Processor for Year
 # ===========================
 @app.context_processor
@@ -117,99 +215,6 @@ def validate_appointment_date_time(date_str, time_str):
     
     return True, None
 
-# ===========================
-# Database Seeding
-# ===========================
-def seed_db_if_needed():
-    """Seeds the database with default admin, doctors, patients, appointments, and medical records."""
-    if not User.query.filter_by(username="admin").first():
-        admin = User(
-            username="admin",
-            password=generate_password_hash("admin123"),
-            role="admin")
-        db.session.add(admin)
-        db.session.commit()
-
-    # --- Doctors ---
-    doctors_to_seed = [
-        {"username": "dr_smith", "name": "Dr. Smith", "specialization": "Cardiology", "phone": "1234567890"},
-        {"username": "dr_jones", "name": "Dr. Jones", "specialization": "Neurology", "phone": "0987654321"},
-    ]
-    for doc in doctors_to_seed:
-        if not User.query.filter_by(username=doc["username"]).first():
-            user = User(
-                username=doc["username"],
-                password=generate_password_hash("123"),
-                role="doctor")
-            db.session.add(user)
-            db.session.commit()
-
-            doctor = Doctor(
-                user_id=user.id,
-                name=doc["name"],
-                specialization=doc["specialization"],
-                phone=doc["phone"])
-            db.session.add(doctor)
-            db.session.commit()
-
-    # --- Patients ---
-    patients_to_seed = [
-        {"username": "alice", "name": "Alice", "age": 30, "gender": "Female", "phone": "0822547896"},
-        {"username": "bob", "name": "Bob", "age": 40, "gender": "Male", "phone": "0248796558"},
-    ]
-    for pat in patients_to_seed:
-        if not User.query.filter_by(username=pat["username"]).first():
-            user = User(
-                username=pat["username"],
-                password=generate_password_hash("123"),
-                role="patient")
-            db.session.add(user)
-            db.session.commit()
-
-            patient = Patient(
-                user_id=user.id,
-                name=pat["name"],
-                age=pat["age"],
-                gender=pat["gender"],
-                phone=pat["phone"])
-            db.session.add(patient)
-            db.session.commit()
-
-    # --- Appointments ---
-    if Appointment.query.count() == 0:
-        doc1 = Doctor.query.filter_by(name="Dr. Smith").first()
-        doc2 = Doctor.query.filter_by(name="Dr. Jones").first()
-        pat1 = Patient.query.filter_by(name="Alice").first()
-        pat2 = Patient.query.filter_by(name="Bob").first()
-
-        appt1 = Appointment(
-            patient_id=pat1.id,
-            doctor_id=doc1.id,
-            date=datetime(2026, 1, 15).date(),
-            time=time(10, 30),
-            status="Pending")
-        
-        appt2 = Appointment(
-            patient_id=pat2.id,
-            doctor_id=doc2.id,
-            date=datetime(2026, 1, 20).date(),
-            time=time(11, 30),
-            status="Pending")
-        db.session.add_all([appt1, appt2])
-        db.session.commit()
-
-    # --- Medical Records ---
-    record1 = MedicalRecord(
-        appointment_id=appt1.id,
-        diagnosis="Hypertension",
-        prescription="Indapamide")
-    
-    record2 = MedicalRecord(
-        appointment_id=appt2.id,
-        diagnosis="Migraine",
-        prescription="Tricyclic")
-    db.session.add_all([record1, record2])
-    db.session.commit()
 
 # ===========================
 # AUTH ROUTES
@@ -223,9 +228,7 @@ def login():
             session["user_id"] = user.id
             session["username"] = user.username
             session["role"] = user.role
-            
             return redirect(url_for("index"))
-        
         flash("Invalid credentials", "danger")  
     return render_template("login.html")
 
