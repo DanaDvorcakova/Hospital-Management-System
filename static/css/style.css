@@ -5,7 +5,6 @@ html, body {
     flex-direction: column;
 }
 
-
 /* Page background */
 .login-page {
     position: relative;
@@ -17,13 +16,13 @@ html, body {
 
 /* Main container */
 .login-container {
-    width: 100%; /* Can be removed since it's already 100% by default */
+    width: 100%;
 }
 
 /* Welcome section */
 .welcome-section {
     color: #0d6efd;
-    margin-top: 5rem; /* Consider reducing this on small screens */
+    margin-top: 5rem;
 }
 
 .welcome-section h2 {
@@ -38,7 +37,7 @@ html, body {
 .login-card {
     background: #ffffff;
     border-radius: 18px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); /* Maybe make the shadow more subtle */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
     padding: 2rem;
     max-width: 420px;
     width: 100%;
@@ -68,19 +67,86 @@ html, body {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+    /* For tablets and smaller screens */
     .login-card {
-        max-width: 360px; /* Adjust max-width for better layout */
+        max-width: 100%;
         padding: 1.5rem;
     }
 
     .welcome-section {
-        margin-top: 3rem; /* Reduce margin-top on small screens */
+        margin-top: 3rem;
+    }
+
+    .login-container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* For mobile screens */
+    .login-card {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    .welcome-section {
+        margin-top: 2rem;
+    }
+
+    .welcome-section h2 {
+        font-size: 1.6rem; 
+    }
+
+    .login-card .form-control {
+        padding: 0.6rem 1rem;
+    }
+
+    .login-card .btn {
+        padding: 0.5rem;
+    }
+
+    .login-container {
+        padding: 0 0.5rem;
+    }
+
+        input[type="search"] {
+        width: 80%; /* Makes search bar wider on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    /* For extra-small screens */
+    .login-card {
+        padding: 1rem;
+        max-width: 90%;
+    }
+
+    .welcome-section h2 {
+        font-size: 1.4rem; 
+    }
+
+    .login-card .form-control {
+        padding: 0.5rem 0.8rem;
+    }
+
+    .login-card .btn {
+        padding: 0.45rem;
+    }
+
+    .login-container {
+        padding: 0 1rem;
+    }
+    .filter-dropdown {
+        min-width: 150px;
+    }
+
+     input[type="search"] {
+        width: 90%; /* Makes the search bar even longer */
     }
 }
 
 /* ------------------ CHART ------------------ */
-/* Chart wrapper for admin dashboard */
 .chart-wrapper {
   width: 100%;
   max-width: 700px;   
@@ -101,17 +167,7 @@ html, body {
     height: 100% !important;
 }
 
-
-/* ------------------ SEARCH HIGHLIGHT ------------------ */
-mark {
-  background-color: #ffe066;
-  padding: 2px;
-  border-radius: 3px;
-}
-
-
 /* ------------------ CARD STYLES ------------------ */
-/* Shared card styles */
 .date-card,
 .appointments-card,
 .doctors-card,
@@ -137,7 +193,6 @@ mark {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
-
 
 /* ------------------ SPECIFIC CARD STYLES ------------------ */
 /* Appointments Card */
@@ -286,22 +341,5 @@ mark {
 .pagination li.disabled {
     background-color: #f0f0f0;
     color: #ccc;
-    cursor: not-allowed;
-    border-color: #ddd;
+    cursor: not-allowed
 }
-
-
-/* ------------------ FOOTER ------------------ */
-.container {
-    flex: 1; /* This allows the content area to expand and push the footer to the bottom */
-}
-
-footer {
-    background-color: #0d6efd; /* Primary color (blue) */
-    color: white;
-    padding: 20px 0; /* Adjust padding as needed */
-    text-align: center;
-}
-
-
-
