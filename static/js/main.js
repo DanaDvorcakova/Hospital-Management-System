@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // ==========================
 // Table Search Function 
 // ==========================
-function enableTableSearch(inputId, columnIndexes) {
+function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
     const searchInput = document.getElementById(inputId);
-    if (!searchInput) return; 
+    if (!searchInput) return;
 
     const rows = document.querySelectorAll('table tbody tr');
 
@@ -34,31 +34,48 @@ function enableTableSearch(inputId, columnIndexes) {
                 const cell = row.cells[index];
                 if (!cell) return;
 
+                // Skip the columns that are in the excludeIndexes array
+                if (excludeIndexes.includes(index)) return;
+
                 // Store original text once if not already stored
                 if (!cell.dataset.original) {
                     cell.dataset.original = cell.textContent.trim();
                 }
 
                 const originalText = cell.dataset.original.toLowerCase();
-                
+
                 if (filter && originalText.includes(filter)) {
                     matchFound = true;
-                    // Highlight the matched term using a regex
+
+                    // Only highlight the text content without affecting buttons
                     const highlightedText = originalText.replace(
                         new RegExp(`(${filter})`, 'gi'),
                         '<mark>$1</mark>'
                     );
-                    cell.innerHTML = highlightedText; // Only modify the text content when there's a match
+
+                    // Preserve the buttons and only update text content
+                    const buttonHTML = Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
+                    const textContentWithoutButtons = cell.textContent.trim().replace(buttonHTML, '').trim();
+
+                    // Update the cell content with highlighted text and reattach buttons
+                    cell.innerHTML = textContentWithoutButtons.replace(
+                        new RegExp(`(${filter})`, 'gi'),
+                        '<mark>$1</mark>'
+                    ) + buttonHTML;  // Append buttons back after highlighted text
                 } else {
-                    cell.innerHTML = cell.dataset.original; // Reset to the original text if no match
+                    // Reset to the original text and reattach buttons
+                    cell.innerHTML = cell.dataset.original + Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
                 }
             });
-    
-            // Show row if match is found or if search filter is empty
+
+            // Hide row if no match is found, or show it if match is found
             row.style.display = matchFound || filter === '' ? '' : 'none';
         });
     });
 }
+
+
+
 
 // ==========================
 // Table Filter Script
