@@ -392,29 +392,26 @@ def edit_patient(patient_id):
 @role_required("admin")
 def delete_patient(patient_id):
     """Deletes a patient if they have no appointments or medical records."""
-    patient = Patient.query.get_or_404(patient_id)  # Get patient by ID
-    appointments = Appointment.query.filter_by(patient_id=patient.id).all()  # Get all appointments for this patient
+    patient = Patient.query.get_or_404(patient_id)  
+    appointments = Appointment.query.filter_by(patient_id=patient.id).all()  
     has_records = False
 
-    # Check if there are any medical records associated with the appointments
+
     for appt in appointments:
         record = MedicalRecord.query.filter_by(appointment_id=appt.id).first()
         if record:
             has_records = True
-            break  # If a medical record exists, stop the loop
-    
-    # If the patient has appointments or medical records, prevent deletion
+            break
+ 
     if appointments or has_records:
         flash("Cannot delete patient because they have appointments or medical records.", "warning")
         return redirect(url_for("admin_patients"))
 
-    # Proceed to delete the patient and the associated user
-    user = User.query.get_or_404(patient.user_id)  # Get the user associated with the patient
-    db.session.delete(patient)  # Delete the patient record
-    db.session.delete(user)  # Delete the user record
-    db.session.commit()  # Commit the transaction to the database
-
-    # Log the deletion action
+    user = User.query.get_or_404(patient.user_id)  
+    db.session.delete(patient)  
+    db.session.delete(user) 
+    db.session.commit() 
+    
     log_action(User.query.get(session["user_id"]), f"Deleted patient {patient.name}")
 
     flash("Patient deleted successfully", "success")
