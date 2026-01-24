@@ -4,6 +4,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, time, date
 
+
 # ===========================
 # Flask App Setup
 # ===========================
@@ -14,6 +15,7 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+    print("✅ Tables created successfully")
 
 
 # ===========================9
