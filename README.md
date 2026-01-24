@@ -4,7 +4,7 @@ Hospital Management System
 
 Author: Dana Dvorcakova
 Date:   25/01/2026
-Link:   
+Link:   https://hospital-management-system-2-zpum.onrender.com
 
 
 OVERVIEW
@@ -349,7 +349,7 @@ Instructions on how to deploy and access the web app on Render.com
 •	Build Command: pip install -r requirements.txt
 •	Start Command: gunicorn app:app
 7.	Click Deploy
-8.	After deployment completes, Render will generate a public URL: 
+8.	After deployment completes, Render will generate a public URL: https://hospital-management-system-2-zpum.onrender.com
 
 
 Setup and Installation instructions

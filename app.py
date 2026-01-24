@@ -12,6 +12,10 @@ app.config.from_object("config")
 app.secret_key = "supersecretkey"
 db.init_app(app)
 
+with app.app_context():
+    db.create_all()
+
+
 # ===========================9
 # Context Processor for Year
 # ===========================
