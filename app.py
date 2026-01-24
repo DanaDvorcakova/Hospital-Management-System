@@ -4,6 +4,14 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, time, date
 
+# ===========================
+# Flask App Setup
+# ===========================
+app = Flask(__name__)
+app.config.from_object("config")
+app.secret_key = "supersecretkey"
+db.init_app(app)
+
 
 # ===========================
 # Database Seeding
@@ -99,24 +107,12 @@ def seed_db_if_needed():
     db.session.add_all([record1, record2])
     db.session.commit()
 
-
-# ===========================
-# Flask App Setup
-# ===========================
-app = Flask(__name__)
-app.config.from_object("config")
-app.secret_key = "supersecretkey"
-db.init_app(app)
-
-# Create tables and seed the database if needed
 with app.app_context():
     db.create_all()
-    print("✅ Tables created successfully")
     seed_db_if_needed()
-    print("✅ Database seeded with initial data")
+  
 
-
-# ===========================
+# ===========================9
 # Context Processor for Year
 # ===========================
 @app.context_processor
@@ -228,7 +224,9 @@ def login():
             session["user_id"] = user.id
             session["username"] = user.username
             session["role"] = user.role
+            
             return redirect(url_for("index"))
+        
         flash("Invalid credentials", "danger")  
     return render_template("login.html")
 
@@ -388,7 +386,6 @@ def edit_patient(patient_id):
         return redirect(url_for("admin_patients"))
     return render_template("admin_patient_edit.html", patient=patient)
 
-
 @app.route("/admin/patient/delete/<int:patient_id>")
 @role_required("admin")
 def delete_patient(patient_id):
@@ -448,7 +445,6 @@ def clear_audit_log():
 
     return render_template("clear_audit_log.html")
 
-
 # -------------------------------------------------
 # DOCTOR ROUTES
 # -------------------------------------------------
@@ -463,7 +459,6 @@ def doctor_appointments():
         doctor_id=doctor.id).order_by(Appointment.date.desc()).paginate(page=page, per_page=10, error_out=False)
 
     return render_template("doctor_appointments.html", appointments=appointments,doctor=doctor)
-
 
 @app.route("/doctor/records")
 @role_required("doctor")
@@ -482,7 +477,6 @@ def doctor_records():
         MedicalRecord.id.desc()).paginate(page=page, per_page=10, error_out=False)
 
     return render_template("doctor_records.html", records=records)
-
 
 @app.route("/doctor/record/<int:appointment_id>", methods=["GET", "POST"])
 @role_required("doctor")
@@ -523,7 +517,6 @@ def edit_medical_record(record_id):
         return redirect(url_for("doctor_appointments"))
     return render_template("record_edit.html", record=record)
 
-
 @app.route("/doctor/patients", methods=["GET", "POST"])
 @role_required("doctor")
 def doctor_view_patient_list():
@@ -540,7 +533,6 @@ def doctor_view_patient_list():
     
     return render_template("doctor_patients.html", patients=patients, search_query=query)
 
-
 @app.route("/doctor/patient/<int:patient_id>")
 @role_required("doctor")
 def doctor_view_patient(patient_id):
@@ -550,7 +542,6 @@ def doctor_view_patient(patient_id):
    
     records = MedicalRecord.query.join(Appointment).filter(Appointment.patient_id == patient.id).all()
     return render_template("doctor_patient_detail.html", patient=patient, records=records)
-
 
 
 # -------------------------------------------------
@@ -605,7 +596,6 @@ def patient_index():
         flash("Profile updated successfully", "success")
     
     return render_template("patient_profile.html", patient=patient)
-
 
 @app.route("/patient/book", methods=["GET", "POST"])
 @role_required("patient")
@@ -705,7 +695,6 @@ def cancel_appointment(appointment_id):
     flash("Appointment canceled successfully", "success")
     return redirect(url_for("patient_appointments"))
 
-
 @app.route("/patient/records")
 @role_required("patient")
 def patient_records():
@@ -731,12 +720,12 @@ def patient_records():
 
     return render_template("patient_records.html", records=records)
 
-
 # -------------------------------------------------
 # MAIN
 # -------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
+
 
 
 
