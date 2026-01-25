@@ -18,9 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
 // ==========================
 // Table Search Function 
 // ==========================
-// ==========================
-// Table Search Function 
-// ==========================
 function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
     const searchInput = document.getElementById(inputId);
     if (!searchInput) return;
@@ -41,9 +38,9 @@ function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
                 if (excludeIndexes.includes(index)) return;
 
                 // Store the visible text (ignore HTML tags) for searching
-                let visibleText = cell.textContent.trim(); // Only visible text
+                let visibleText = cell.textContent.trim();
                 if (!cell.dataset.original) {
-                    cell.dataset.original = visibleText;  // Store only visible text
+                    cell.dataset.original = visibleText;  
                 }
 
                 const originalText = cell.dataset.original.toLowerCase();
@@ -65,12 +62,12 @@ function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
                     cell.innerHTML = textContentWithoutButtons.replace(
                         new RegExp(`(${filter})`, 'gi'),
                         '<mark>$1</mark>'
-                    ) + buttonHTML;  // Append the <a> tags (links) back after the highlighted text
+                    ) + buttonHTML; 
                 } else {
                     // Reset to the original text and reattach buttons
                     if (cell.classList.contains('action-column')) {
                         // Hide the text in the action column, keep only the button
-                        cell.innerHTML = buttonHTML; // Only buttons, no text
+                        cell.innerHTML = buttonHTML; 
                     } else {
                         // Reset to the original text and reattach links
                         cell.innerHTML = cell.dataset.original + Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
@@ -83,7 +80,7 @@ function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
         });
     });
 }
-
+   
 
 // ==========================
 // Table Filter Script

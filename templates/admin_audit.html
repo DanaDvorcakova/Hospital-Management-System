@@ -36,8 +36,8 @@
     {% for log in logs %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ log.user_id or "-" }}</td>
-
+            <td>{{ log.user_id or "-" }}
+            </td>
 <td>
     <!-- Username with links to relevant pages based on user role -->
     {% if log.role == "admin" %}
@@ -48,11 +48,9 @@
         <a href="{{ url_for('admin_patients') }}" class="text-decoration-none fw-semibold">{{ log.username }}</a>
     {% else %}
         <!-- Only show plain username if it's not linked -->
-        {{ log.username }}
+     {{ log.username }}
     {% endif %}
-</td>
-
-    
+</td> 
 
             <td><span class="badge bg-secondary text-uppercase">{{ log.role or "system" }}</span></td>
             <td><span class="audit-action" data-action="{{ log.action|lower }}">{{ log.action }}</span></td>
@@ -91,7 +89,7 @@
   </div>
 </div>
 
-
 {% endblock %}
+
 
 

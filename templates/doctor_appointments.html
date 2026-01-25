@@ -16,13 +16,13 @@
 </div>
 
 <!-- Appointments Table -->
-<table class="table table-striped table-bordered align-middle">
+<table class="table table-striped table-bordered align-middle" id="appointmentsTable">
     <thead>
         <tr>
             <th>ID</th>
             <th>Patient</th>
             <th>Date</th>
-            <th >Status</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -33,6 +33,7 @@
             <td>{{ appt.id }}</td>
             <td>{{ appt.patient.name }}</td>
             <td>{{ appt.date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ appt.medical_record.id }}</td>
 
             <td>
                 <!-- Status of the appointment (Completed or Pending) -->
@@ -54,13 +55,12 @@
     </tbody>
 </table>
 
-<!-- Pagination -->	
+<!-- Pagination -->  
 {% set paginator = appointments %}
 {% set endpoint = 'doctor_appointments' %}
 {% set query_params = {} %}
 {% include 'pagination.html' %}
 
 {% endblock %}
-
 
 
