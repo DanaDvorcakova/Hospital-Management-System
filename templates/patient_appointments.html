@@ -10,7 +10,11 @@
 <a href="{{ url_for('book_appointment') }}" class="btn btn-primary mb-3">Book New Appointment</a>
 
 <!-- Search Box for filtering appointments -->
-<input id="appointmentsSearch" class="form-control mb-3 w-50" type="text" placeholder="Search by doctor or status" value="{{ request.args.get('search', '') }}">
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6">
+        <input id="appointmentsSearch" class="form-control mb-3" type="text" placeholder="Search by doctor or status" value="{{ request.args.get('search', '') }}">
+    </div>
+</div>
 
 <!-- Appointment Table -->
 <table class="table table-striped table-bordered align-middle" id="appointmentsTable">
@@ -49,10 +53,6 @@
                     <span class="text-muted">No actions</span>
                 {% endif %}
             </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="6" class="text-center">No appointments found.</td>
         </tr>
         {% endfor %}
     </tbody>

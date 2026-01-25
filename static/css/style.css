@@ -1,11 +1,38 @@
-html, body {
+/* Base Styles */
+body {
     height: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
+    min-height: 100vh; 
 }
 
-/* Page background */
+/* Navbar */
+.navbar {
+    padding: 1rem 2rem; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-toggler {
+    border-color: #fff; 
+}
+
+/* Main content */
+main {
+    flex-grow: 1; 
+    padding: 0 15px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 1rem; 
+    background-color: #007bff;
+}
+
+/* ------------------ Login Page ------------------ */
 .login-page {
     position: relative;
     min-height: 100vh;
@@ -14,12 +41,11 @@ html, body {
     padding: 5rem 2rem 2rem;
 }
 
-/* Main container */
 .login-container {
     width: 100%;
 }
 
-/* Welcome section */
+/* ------------------ Welcome Section ------------------ */
 .welcome-section {
     color: #0d6efd;
     margin-top: 5rem;
@@ -33,7 +59,7 @@ html, body {
     color: #2f7de1;
 }
 
-/* Login card */
+/* ------------------ Login Card ------------------ */
 .login-card {
     background: #ffffff;
     border-radius: 18px;
@@ -48,7 +74,6 @@ html, body {
     transform: translateY(-3px);
 }
 
-/* Inputs */
 .login-card .form-control {
     border-radius: 12px;
     padding: 0.7rem 1rem;
@@ -59,130 +84,28 @@ html, body {
     box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.2);
 }
 
-/* Buttons */
 .login-card .btn {
     border-radius: 12px;
     font-weight: 600;
     padding: 0.65rem;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    /* For tablets and smaller screens */
-    .login-card {
-        max-width: 100%;
-        padding: 1.5rem;
-    }
-
-    .welcome-section {
-        margin-top: 3rem;
-    }
-
-    .login-container {
-        padding: 0 1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    /* For mobile screens */
-    .login-card {
-        max-width: 100%;
-        padding: 1rem;
-    }
-
-    .welcome-section {
-        margin-top: 2rem;
-    }
-
-    .welcome-section h2 {
-        font-size: 1.6rem; 
-    }
-
-    .login-card .form-control {
-        padding: 0.6rem 1rem;
-    }
-
-    .login-card .btn {
-        padding: 0.5rem;
-    }
-
-    .login-container {
-        padding: 0 0.5rem;
-    }
-
-        input[type="search"] {
-        width: 80%; /* Makes search bar wider on small screens */
-    }
-}
-
-@media (max-width: 480px) {
-    /* For extra-small screens */
-    .login-card {
-        padding: 1rem;
-        max-width: 90%;
-    }
-
-    .welcome-section h2 {
-        font-size: 1.4rem; 
-    }
-
-    .login-card .form-control {
-        padding: 0.5rem 0.8rem;
-    }
-
-    .login-card .btn {
-        padding: 0.45rem;
-    }
-
-    .login-container {
-        padding: 0 1rem;
-    }
-    .filter-dropdown {
-        min-width: 150px;
-    }
-
-     input[type="search"] {
-        width: 90%; /* Makes the search bar even longer */
-    }
-}
-
-/* ------------------ CHART ------------------ */
-.chart-wrapper {
-  width: 100%;
-  max-width: 700px;   
-  height: 500px;
-  margin: 0 auto;
-  position: relative;
-}
-
-#appointmentChart {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
-/* Make canvas fill the wrapper */
-.chart-wrapper canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* ------------------ CARD STYLES ------------------ */
+/* ------------------ Dashboard and Card Styles ------------------ */
 .date-card,
 .appointments-card,
 .doctors-card,
 .patients-card {
-  border-radius: 15px; 
-  transition: transform 0.2s, box-shadow 0.3s, color 0.3s;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); 
-  padding: 20px; 
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; 
+    border-radius: 15px; 
+    transition: transform 0.2s, box-shadow 0.3s, color 0.3s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 180px;
 }
 
-/* Hover effect for all cards */
 .card:hover,
 .date-card:hover,
 .appointments-card:hover,
@@ -194,25 +117,96 @@ html, body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ------------------ SPECIFIC CARD STYLES ------------------ */
-/* Appointments Card */
-.appointments-card {
-  height: 140px; /* Specific height for appointments card */
-}
-
-/* Completed Card Style */
+/* Completed and Pending Card Styles */
 .completed-card {
-  background: linear-gradient(135deg, #28a745, #218838); 
-  color: white; 
+    background: linear-gradient(135deg, #28a745, #218838); 
+    color: white;
 }
 
-/* Pending Card Style */
 .pending-card {
-  background: linear-gradient(135deg, #ffc107, #e0a800);
-  color: black; 
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: black;
 }
 
-/* ------------------ FILTERABLE INPUT ------------------ */
+/* ------------------ Chart Wrapper ------------------ */
+.chart-wrapper {
+    width: 100%;
+    max-width: 700px;
+    height: 500px; 
+    margin: 0 auto;
+    position: relative;
+}
+
+#appointmentChart {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* Make canvas fill the wrapper */
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ------------------ Table Styles ------------------ */
+.table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.table-responsive {
+    overflow-x: auto; 
+}
+
+/* ------------------ Buttons ------------------ */
+.btn-outline-light {
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------ Pagination ------------------ */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    gap: 1px;
+    justify-content: center;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.pagination li {
+    cursor: pointer;
+    padding: 2px 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination li.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+}
+
+.pagination li:hover {
+    background-color: #e0e7ff;
+}
+
+.pagination li.disabled {
+    background-color: #f0f0f0;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* ------------------ Filterable Input ------------------ */
 .filterable {
     cursor: pointer;
     position: relative;
@@ -302,44 +296,79 @@ html, body {
     accent-color: #0d6efd; 
 }
 
+/* Responsive*/
 @media (max-width: 768px) {
-    .filter-dropdown {
-        min-width: 150px; 
+    .navbar-collapse {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar-nav .nav-item {
+        margin-bottom: 10px;
+    }
+
+    .navbar-text {
+        margin-top: 20px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar-text .btn {
+        width: 100%;
+        max-width: 200px;
     }
 }
 
-/* ------------------ PAGINATION ------------------ */
-.pagination {
-    display: flex;
-    list-style: none;
-    padding-left: 0;
-    gap: 1px; 
-    justify-content: center;
-    margin-top: 5px; 
-    font-size: 12px; 
+/* For smaller screens */
+@media (max-width: 480px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .login-card {
+        padding: 1rem;
+        max-width: 90%;
+    }
+
+    .welcome-section h2 {
+        font-size: 1.4rem;
+    }
+
+    .login-card .form-control {
+        padding: 0.5rem 0.8rem;
+    }
+
+    .login-card .btn {
+        padding: 0.45rem;
+    }
+
+    .login-container {
+        padding: 0 1rem;
+    }
+
+    .pagination {
+        font-size: 10px;
+    }
+
+    input[type="search"] {
+        width: 80%;
+    }
+
+    .filter-dropdown {
+        min-width: 150px;
+    }
 }
 
-.pagination li {
-    cursor: pointer;
-    padding: 2px 4px; 
-    border: 1px solid #ccc;
-    border-radius: 3px; 
-    transition: background 0.2s, color 0.2s;
-}
 
-.pagination li.active {
-    background-color: #0d6efd;
-    color: white;
-    border-color: #0d6efd;
-}
 
-.pagination li:hover {
-    background-color: #e0e7ff;
-}
 
-/* Pagination: Disabled state */
-.pagination li.disabled {
-    background-color: #f0f0f0;
-    color: #ccc;
-    cursor: not-allowed
-}
+

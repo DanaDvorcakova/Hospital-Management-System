@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // ==========================
 // Table Search Function 
 // ==========================
+// ==========================
+// Table Search Function 
+// ==========================
 function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
     const searchInput = document.getElementById(inputId);
     if (!searchInput) return;
@@ -37,9 +40,10 @@ function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
                 // Skip the columns that are in the excludeIndexes array
                 if (excludeIndexes.includes(index)) return;
 
-                // Store original text once if not already stored
+                // Store the visible text (ignore HTML tags) for searching
+                let visibleText = cell.textContent.trim(); // Only visible text
                 if (!cell.dataset.original) {
-                    cell.dataset.original = cell.textContent.trim();
+                    cell.dataset.original = visibleText;  // Store only visible text
                 }
 
                 const originalText = cell.dataset.original.toLowerCase();
@@ -47,24 +51,30 @@ function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
                 if (filter && originalText.includes(filter)) {
                     matchFound = true;
 
-                    // Only highlight the text content without affecting buttons
+                    // Highlight the text content without affecting links or HTML
                     const highlightedText = originalText.replace(
                         new RegExp(`(${filter})`, 'gi'),
                         '<mark>$1</mark>'
                     );
 
-                    // Preserve the buttons and only update text content
+                    // Preserve any existing HTML elements (e.g., links) and only update the text content
                     const buttonHTML = Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
-                    const textContentWithoutButtons = cell.textContent.trim().replace(buttonHTML, '').trim();
+                    const textContentWithoutButtons = visibleText.replace(buttonHTML, '').trim();
 
-                    // Update the cell content with highlighted text and reattach buttons
+                    // Update the cell content with highlighted text and reattach the buttons (links)
                     cell.innerHTML = textContentWithoutButtons.replace(
                         new RegExp(`(${filter})`, 'gi'),
                         '<mark>$1</mark>'
-                    ) + buttonHTML;  // Append buttons back after highlighted text
+                    ) + buttonHTML;  // Append the <a> tags (links) back after the highlighted text
                 } else {
                     // Reset to the original text and reattach buttons
-                    cell.innerHTML = cell.dataset.original + Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
+                    if (cell.classList.contains('action-column')) {
+                        // Hide the text in the action column, keep only the button
+                        cell.innerHTML = buttonHTML; // Only buttons, no text
+                    } else {
+                        // Reset to the original text and reattach links
+                        cell.innerHTML = cell.dataset.original + Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
+                    }
                 }
             });
 
@@ -73,8 +83,6 @@ function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
         });
     });
 }
-
-
 
 
 // ==========================
@@ -354,5 +362,6 @@ function initModalConfirmations() {
         });
     });
 }
+
 
 

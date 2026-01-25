@@ -6,7 +6,11 @@
 <h3>🩺  My Medical Records</h3>
 
 <!-- Search Box for filtering records -->
-<input id="recordsSearch" class="form-control mb-3 w-50" type="text" placeholder="Search by doctor or diagnosis" value="{{ request.args.get('search', '') }}">
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6">
+        <input id="recordsSearch" class="form-control mb-3" type="text" placeholder="Search by doctor or diagnosis" value="{{ request.args.get('search', '') }}">
+    </div>
+</div>
 
 <!-- Check if records are available -->
 {% if records.items %}

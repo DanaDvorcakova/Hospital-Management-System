@@ -6,7 +6,11 @@
 <h3>🩺 All Medical Records</h3>
 
 <!-- Search Box for filtering records -->
-<input id="recordsSearch" class="form-control mb-3 w-50" type="text" placeholder="Search by doctor or diagnosis" value="{{ request.args.get('search', '') }}">
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6">
+        <input id="recordsSearch" class="form-control mb-3" type="text" placeholder="Search by doctor or diagnosis" value="{{ request.args.get('search', '') }}">
+    </div>
+</div>
 
 <!-- Medical Records Table -->
 <table class="table table-striped table-bordered align-middle">
@@ -32,7 +36,7 @@
             <td>{{ record.prescription }}</td>
             <td>
                 <!-- Edit button -->
-                <a href="{{ url_for('edit_medical_record', record_id=record.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{{ url_for('edit_medical_record', record_id=record.id) }}" class="btn btn-warning btn-sm">Edit Record</a>
             </td>
         </tr>
         {% else %}
