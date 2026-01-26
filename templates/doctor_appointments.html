@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block title %}My Appointments{% endblock %}
 
 {% block content %}
@@ -7,8 +8,12 @@
 <h3 class="mb-4">Welcome {{ doctor.name }}</h3>
 <h4>📅 Your Appointments</h4>
 
-<!-- Search Box for filtering appointments -->
-<input id="appointmentsSearch" class="form-control mb-3 w-50" type="text" placeholder="Search by doctor or status" value="{{ request.args.get('search', '') }}">
+<!-- Search Bar -->
+{% set show_search = True %}
+{% set search_id = "appointmentsSearch" %}
+{% set search_placeholder = "Type to search appointments" %}
+{% set search_value = request.args.get('search', '') %}
+{% include "components/search_bar.html" %}
 
 <!-- Check if there are any appointments -->
 {% if appointments %}
@@ -18,36 +23,34 @@
             <tr>
                 <th>ID</th>
                 <th>Patient</th>
-                <th>Date</th>	
+                <th>Date</th>    
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Loop through each appointment and display its details -->       
             {% for appt in appointments %}
             <tr>
                 <td>{{ appt.id }}</td>
                 <td>{{ appt.patient.name }}</td>
                 <td>{{ appt.date.strftime('%Y-%m-%d') }}</td>
                 <td>
-                    <!-- Status of the appointment (Completed or Pending) -->
                     {% if appt.status == "Completed" %}
                         <span class="badge bg-success">Completed</span>
                     {% else %}
                         <span class="badge bg-warning text-dark">Pending</span>
                     {% endif %}
                 </td>
-                <td>
-                    <!-- Check if the appointment has a medical record -->
-                    {% if not appt.medical_record %}
-                        <a href="{{ url_for('add_record', appointment_id=appt.id) }}" class="btn btn-primary btn-sm">Add Record</a>
-                    {% else %}
-                        <a href="{{ url_for('edit_medical_record', record_id=appt.medical_record.id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    {% endif %}
-                </td>
-            </tr>
+          <td class="action-column">
+    {% if not appt.medical_record %}
+        <a href="{{ url_for('add_record', appointment_id=appt.id) }}" class="btn btn-primary btn-sm">Add Record</a>
+    {% else %}
+        <a href="{{ url_for('edit_medical_record', record_id=appt.medical_record.id) }}" class="btn btn-warning btn-sm">Edit</a>
+    {% endif %}
+</td>
+       </tr>
             {% endfor %}
+      {% endif %}
         </tbody>
     </table>
 
@@ -55,11 +58,7 @@
     {% set paginator = appointments %}
     {% set endpoint = 'doctor_appointments' %}
     {% set query_params = {} %}
-    {% include 'pagination.html' %}
-{% else %}
-    <!-- Message displayed when no appointments are found -->
-    <p class="text-center">No appointments found.</p>
-{% endif %}
+    {% include 'components/pagination.html' %}
 
 {% endblock %}
 

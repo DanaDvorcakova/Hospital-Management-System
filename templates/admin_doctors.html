@@ -11,12 +11,12 @@
     <a href="{{ url_for('new_doctor') }}" class="btn btn-success">Add New Doctor</a>
 </div>
 
-<!-- Search box for filtering doctors -->
-<div class="row">
-    <div class="col-12 col-md-8 col-lg-6">
-        <input id="doctorSearch" class="form-control mb-3" type="text" placeholder="Search by name or specialization" value="{{ request.args.get('search', '') }}">
-    </div>
-</div>
+<!-- Search Bar -->
+{% set show_search = True %}
+{% set search_id = "doctorSearch" %}
+{% set search_placeholder = "Type to search doctors" %}
+{% set search_value = request.args.get('search', '') %}
+{% include "components/search_bar.html" %}
 
 <!-- Doctors Table -->
 <table class="table table-striped table-bordered align-middle">
@@ -57,7 +57,7 @@
 {% set paginator = doctors %}
 {% set endpoint = 'admin_doctors' %}
 {% set query_params = { 'search': request.args.get('search', '') } %}
-{% include 'pagination.html' %}
+{% include 'components/pagination.html' %}
 
 <!-- Clear Audit Log Modal -->
 <div class="modal fade" id="clearAuditLogModal" tabindex="-1" aria-labelledby="clearAuditLogLabel" aria-hidden="true">

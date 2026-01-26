@@ -123,7 +123,7 @@ function createDropdown(th, colIndex) {
     th.classList.add("open");
     const dropdown = document.createElement("div");
     dropdown.className = "filter-dropdown";
-    dropdown.addEventListener("click", e => e.stopPropagation()); // Prevent closing when clicking inside dropdown
+    dropdown.addEventListener("click", e => e.stopPropagation()); 
 
     const thRect = th.getBoundingClientRect();
     dropdown.style.minWidth = thRect.width + "px";
@@ -136,7 +136,14 @@ function createDropdown(th, colIndex) {
 
     const uniqueValues = Array.from(new Set(tempValues)).sort();
 
-    // Select All checkbox
+    // Create the search input for the dropdown (above the checkboxes)
+    const searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.className = "filter-search";
+    searchInput.placeholder = "Search...";
+    dropdown.appendChild(searchInput);
+
+    // Create Select All checkbox
     const selectAllLabel = document.createElement("label");
     selectAllLabel.classList.add("select-all");
     const selectAllCheckbox = document.createElement("input");
@@ -146,7 +153,12 @@ function createDropdown(th, colIndex) {
     selectAllLabel.appendChild(document.createTextNode(" Select All"));
     dropdown.appendChild(selectAllLabel);
 
-    // Individual checkboxes
+    // Checkbox container
+    const checkboxContainer = document.createElement("div");
+    checkboxContainer.className = "checkbox-container";
+    dropdown.appendChild(checkboxContainer);
+
+    // Individual checkboxes for each unique value
     uniqueValues.forEach(value => {
         const label = document.createElement("label");
         const checkbox = document.createElement("input");
@@ -155,30 +167,50 @@ function createDropdown(th, colIndex) {
         checkbox.checked = activeFilters[colIndex]?.includes(value);
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(" " + value));
-        dropdown.appendChild(label);
+        checkboxContainer.appendChild(label);
 
         checkbox.addEventListener("change", () => {
-            const checkboxes = Array.from(dropdown.querySelectorAll("input[type=checkbox]")).filter(cb => cb !== selectAllCheckbox);
-            const checked = checkboxes.filter(cb => cb.checked).map(cb => cb.value);
-            activeFilters[colIndex] = checked.length ? checked : null;
-            if (!checked.length) delete activeFilters[colIndex];
-            selectAllCheckbox.checked = checked.length === checkboxes.length;
-            applyFilters(); 
+            const checked = [...checkboxContainer.querySelectorAll("input[type=checkbox]")]
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            if (checked.length) {
+                activeFilters[colIndex] = checked;
+            } else {
+                delete activeFilters[colIndex];
+            }
+
+            selectAllCheckbox.checked = checked.length === uniqueValues.length;
+            applyFilters();
         });
     });
 
     // Select All logic
     selectAllCheckbox.addEventListener("change", () => {
-        const checkboxes = Array.from(dropdown.querySelectorAll("input[type=checkbox]")).filter(cb => cb !== selectAllCheckbox);
+        const checkboxes = checkboxContainer.querySelectorAll("input[type=checkbox]");
         checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
         if (selectAllCheckbox.checked) {
             activeFilters[colIndex] = uniqueValues;
         } else {
             delete activeFilters[colIndex];
         }
-        applyFilters(); 
+        applyFilters();
     });
 
+    // Search functionality inside the dropdown
+    searchInput.addEventListener("keyup", () => {
+        const search = searchInput.value.toLowerCase();
+
+        checkboxContainer.querySelectorAll("label").forEach(label => {
+            label.style.display = label.textContent.toLowerCase().includes(search) ? "" : "none";
+        });
+
+        // Update the search filter for the column
+        columnSearch[colIndex] = search;
+        applyFilters();
+    });
+
+    setTimeout(() => searchInput.focus(), 50);
     th.appendChild(dropdown);
 }
 
@@ -190,7 +222,7 @@ function closeAllDropdowns(exceptTh = null) {
             dropdown.classList.remove("show");
             parentTh?.classList.remove("open");
             setTimeout(() => {
-                if (dropdown.parentElement) dropdown.parentElement.removeChild(dropdown);
+                dropdown.remove();
             }, 200);
         }
     });
@@ -211,7 +243,6 @@ document.addEventListener("click", (event) => {
         closeAllDropdowns();
     }
 });
-
 
 
 // ==========================
@@ -301,7 +332,6 @@ function getChartDataLabelsPlugin() {
     return typeof ChartDataLabels !== 'undefined' ? [ChartDataLabels] : [];
 }
 
-
 // ==========================
 // Modal Confirmation Script
 // ==========================
@@ -360,5 +390,42 @@ function initModalConfirmations() {
     });
 }
 
+// ==========================
+// Typewriter effect for multiple search bars
+// ==========================
+function typewriterSearchBars(config = [], speed = 100, loopDelay = 3000) {
+    config.forEach(({ inputId, text }) => {
+        const searchInput = document.getElementById(inputId);
+        if (!searchInput) return;
+
+        let index = 0;
+
+        function type() {
+            if (index <= text.length) {
+                searchInput.setAttribute('placeholder', text.slice(0, index));
+                index++;
+                setTimeout(type, speed);
+            } else {
+                // Optional: restart after a delay
+                setTimeout(() => {
+                    index = 0;
+                    type();
+                }, loopDelay);
+            }
+        }
+
+        type();
+    });
+}
+
+// Multiple pages/search bars
+document.addEventListener("DOMContentLoaded", () => {
+    typewriterSearchBars([
+        { inputId: "doctorSearch", text: "Type to search doctors" },
+        { inputId: "patientSearch", text: "Type to search patients" },
+        { inputId: "appointmentsSearch", text: "Type to search appointments" },
+        { inputId: "recordsSearch", text: "Type to search records" }
+    ]);
+});
 
 

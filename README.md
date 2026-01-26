@@ -25,6 +25,7 @@ Column-base filtering with dropdowns
 Dynamic appointment status chart 
 Confirmation modals to delete/cancel actions
 Auto-dismiss flash messages
+Typewritter effect in search bars
 
 
 DATABASE
@@ -290,53 +291,65 @@ Doctor DR. Smith
 
 PROJECT FOLDER STRUCTURE
 
-HOSPITAL-MANAGEMENT-SYSTEM/
+HOSPITAL-MANAGEMENT-SYSTEM/                     # Main project folder
 │
-├── __pycache__/                      # Python cache files (auto-generated)
-├── .venv/                            # Virtual environment directory
-├── instance/                         # Instance folder for config & database
-│   ├── hospital.db                   # SQLite database file
-│   └── requirements.txt              # Python dependencies
+├── __pycache__/                                # Python cache files (auto-generated)
 │
-├── static/                           # Static files (CSS, images, JavaScript)
-│   ├── css/
-│   │   └── style.css                 # Stylesheet for the application
-│   ├── image/
-│   │   ├── clinic.jpg                # Clinic image
-│   │   ├── erd1.png                  # ER diagram image 1
-│   │   └── erd2.png                  # ER diagram image 2
-│   └── js/
-│       └── main.js                   # JavaScript for client-side functionality
+├── .venv/                                      # Virtual environment directory for Python dependencies
 │
-├── templates/                        # HTML templates for rendering views
-│   ├── admin_audit.html              # Admin audit log view
-│   ├── admin_doctors.html            # Admin doctors management view
-│   ├── admin_patient_edit.html       # Edit patient info (admin)
-│   ├── admin_patients.html           # Admin patients management view
-│   ├── appointment_edit.html         # Appointment editing view
-│   ├── appointment_new.html          # New appointment creation view
-│   ├── base.html                     # Base template with common layout
-│   ├── doctor_appointments.html      # Doctor's appointments overview
-│   ├── doctor_edit.html              # Doctor profile editing view
-│   ├── doctor_new.html               # New doctor registration
-│   ├── doctor_patient_detail.html    # Details of patient for doctor
-│   ├── doctor_patients.html          # List of patients for doctor
-│   ├── doctor_records.html           # Doctor's medical records view
-│   ├── index.html                    # Homepage or landing page
-│   ├── login.html                    # User login page
-│   ├── pagination.html               # Pagination controls for lists
-│   ├── patient_appointments.html     # Patient's appointments view
-│   ├── patient_profile.html          # Patient profile view
-│   ├── patient_records.html          # Patient medical records view
-│   ├── record_edit.html              # Edit medical record view
-│   ├── record_new.html               # New medical record creation view
-│   └── register.html                 # User registration page
+├── instance/                                   # Instance folder for configuration & database
+│   ├── hospital.db                             # SQLite database file
+│   └── requirements.txt                        # Python dependencies
 │
-├── app.py                            # Main Flask application file
-├── config.py                         # Configuration settings for the app
-├── models.py                         # Database models using SQLAlchemy
-├── README.md                         # Project documentation
-└── ER Diagrams.docx                  # Entity-Relationship diagrams for DB design
+├── static/                                     # Static files (CSS, images, JavaScript)
+│   ├── css/                                    # CSS folder
+│   │   └── style.css                           # Stylesheet for the application
+│   ├── image/                                  # Image folder for app visuals
+│   │   ├── clinic.jpg                          # Clinic image for branding
+│   │   ├── erd1.png                            # ER diagram image 1
+│   │   └── erd2.png                            # ER diagram image 2
+│   └── js/                                     # JavaScript folder
+│       └── main.js                             # JavaScript for client-side functionality
+│
+├── templates/                                  # HTML templates for rendering views
+│   ├── components/                             # Reusable components
+│   │   ├── pagination.html                     # Pagination controls for lists
+│   │   └── search_bar.html                     # Search bar for filtering
+│   ├── admin_audit.html                        # Admin audit log view
+│   ├── admin_doctors.html                      # Admin doctors management view
+│   ├── admin_patient_edit.html                 # Edit patient info (admin)
+│   ├── admin_patients.html                     # Admin patients management view
+│   ├── appointment_edit.html                   # Appointment editing view
+│   ├── appointment_new.html                    # New appointment creation view
+│   ├── base.html                               # Base template with common layout
+│   ├── doctor_appointments.html                # Doctor's appointments overview
+│   ├── doctor_edit.html                        # Doctor profile editing view
+│   ├── doctor_new.html                         # New doctor registration
+│   ├── doctor_patient_detail.html              # Details of patient for doctor
+│   ├── doctor_patients.html                    # List of patients for doctor
+│   ├── doctor_records.html                     # Doctor's medical records view
+│   ├── index.html                              # Homepage or landing page
+│   ├── login.html                              # User login page
+│   ├── patient_appointments.html               # Patient's appointments view
+│   ├── patient_profile.html                    # Patient profile view
+│   ├── patient_records.html                    # Patient medical records view
+│   ├── record_edit.html                        # Edit medical record view
+│   ├── record_new.html                         # New medical record creation view
+│   └── register.html                           # User registration page
+│
+├── app.py                                      # Main Flask application file
+├── config.py                                   # Configuration settings for the app
+├── models.py                                   # Database models using SQLAlchemy
+├── README.md                                   # Project documentation
+└── ER Diagrams.docx                            # Entity-Relationship diagrams for DB design
+
+
+Render Database
+Host name/address: dpg-d5pukpf5r7bs738m9oj0-a.frankfurt-postgres.render.com
+Port: 5432
+Maintenance database: hospital_db_v57t
+Username: hospital_db_v57t_user
+Password: 6mYkKVljqO8kxDqPWTOmxWgT2p72TCJ2
 
 
 Instructions on how to deploy and access the web app on Render.com
@@ -397,4 +410,8 @@ Udemy
 YouTube
 w3schools
 github.com
+My previous projects
 Class Material
+
+
+

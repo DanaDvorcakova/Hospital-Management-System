@@ -1,0 +1,14 @@
+{% if show_search %}
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6">
+        <input
+            id="{{ search_id }}"
+            name="search"
+            class="form-control mb-3"
+            type="text"
+            placeholder="{{ search_placeholder | default('Type to search') }}"
+            value="{{ search_value | default('') }}"
+        >
+    </div>
+</div>
+{% endif %}

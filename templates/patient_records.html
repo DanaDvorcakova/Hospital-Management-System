@@ -5,12 +5,12 @@
 {% block content %}
 <h3>🩺  My Medical Records</h3>
 
-<!-- Search Box for filtering records -->
-<div class="row">
-    <div class="col-12 col-md-8 col-lg-6">
-        <input id="recordsSearch" class="form-control mb-3" type="text" placeholder="Search by doctor or diagnosis" value="{{ request.args.get('search', '') }}">
-    </div>
-</div>
+<!-- Search Bar -->
+{% set show_search = True %}
+{% set search_id = "recordsSearch" %}
+{% set search_placeholder = "Type to search medical records" %}
+{% set search_value = request.args.get('search', '') %}
+{% include "components/search_bar.html" %}
 
 <!-- Check if records are available -->
 {% if records.items %}
@@ -43,11 +43,8 @@
 {% set paginator = records %}
 {% set endpoint = 'patient_records' %}
 {% set query_params = { 'search': request.args.get('search', '') } %}
-{% include 'pagination.html' %}
+{% include 'components/pagination.html' %}
 
-
-{% else %}
-<!-- No records available -->
-<p>No medical records found.</p>
 {% endif %}
+
 {% endblock %}
