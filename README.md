@@ -8,6 +8,14 @@ Link Render:   https://hospital-management-system-2-zpum.onrender.com
 Link Github:   https://danadvorcakova.github.io/Hospital-Management-System/
 
 
+Render Database
+Host name/address: dpg-d5pukpf5r7bs738m9oj0-a.frankfurt-postgres.render.com
+Port: 5432
+Maintenance database: hospital_db_v57t
+Username: hospital_db_v57t_user
+Password: 6mYkKVljqO8kxDqPWTOmxWgT2p72TCJ2
+
+
 OVERVIEW
 The Small Clinic Management System is designed to help clinics efficiently manage doctors, patients, and appointments in a centralized digital platform. It enables administrators to oversee clinic operations, doctors to manage consultations and medical records, and patients to book appointments and access their treatment information. The system improves organization, reduces paperwork, and enhances the overall quality of patient care.
 
@@ -20,7 +28,6 @@ Paginated views for large datasets
 
 JavaScript:
 Live table search (rows hide/show as typing)
-Highlighted search terms
 Column-base filtering with dropdowns
 Dynamic appointment status chart 
 Confirmation modals to delete/cancel actions
@@ -37,11 +44,6 @@ PostgreSQL is used in production when deployed on Render.com.
 
 PERSONAS
 Admin
-Doctors
-Patients
-
-ENTITIES and DATABASE DESIGN:
-Admin
 Doctor
 Patient
 Appointment
@@ -50,7 +52,7 @@ Diagnosis
 Prescription
 Audit Log
 
-Entities and Attributes
+ENTITIES AND ATTRIBUTES
 1.	User
 id (PK)
 username
@@ -268,7 +270,7 @@ Doctor/Patient → MedicalRecord via Appointment (indirect relationship)
 User → AuditLog: 1:N (tracks all actions performed by users)
 
 
-ER Diagrams
+ER DIAGRAMs
 static/image/erd1.png
 static/image/erd2.png
 
@@ -341,15 +343,22 @@ HOSPITAL-MANAGEMENT-SYSTEM/                     # Main project folder
 ├── config.py                                   # Configuration settings for the app
 ├── models.py                                   # Database models using SQLAlchemy
 ├── README.md                                   # Project documentation
-└── ER Diagrams.docx                            # Entity-Relationship diagrams for DB design
+                     
 
+DOCTOR AND PATIENT WORKFLOW 
+Doctor
+Initial Appointment Status - Upcoming
+When an appointment is created, it is set to Upcoming status. In this status, there are no available actions for the doctor.
+Status Transition to Pending
+On the day of the appointment, the status changes to Pending. At this point, the doctor can take action by selecting Add Record to document details about the appointment.
+Status Transition to Completed
+Once the doctor has added a record, the appointment status is automatically updated to Completed. In this status, the doctor can still take action by selecting Edit, allowing them to update the record or add additional notes if necessary.
 
-Render Database
-Host name/address: dpg-d5pukpf5r7bs738m9oj0-a.frankfurt-postgres.render.com
-Port: 5432
-Maintenance database: hospital_db_v57t
-Username: hospital_db_v57t_user
-Password: 6mYkKVljqO8kxDqPWTOmxWgT2p72TCJ2
+Patient
+Initial Appointment Status - Pending
+When an appointment is created, it is set to Pending status. In this status, the patient has the ability to Edit or Cancel the appointment, allowing them to make changes or cancel it if necessary. These actions are available until the scheduled time of the appointment.
+Status Transition to Completed
+
 
 
 Instructions on how to deploy and access the web app on Render.com
@@ -399,7 +408,9 @@ PostgreSQL (production deployment on Render)
 HTML, CSS, JavaScript  
 draw.io  
 
-Note: SQLite is used for local development and testing. PostgreSQL is used in production when deployed on Render.com.
+Note: 
+SQLite is used for local development and testing. 
+PostgreSQL is used in production when deployed on Render.com.
 
 
 LIST OF SOURCES
