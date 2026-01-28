@@ -113,11 +113,7 @@ def seed_db_if_needed():
         db.session.add_all([record1, record2])
         db.session.commit()
 
-with app.app_context():
-    db.create_all()  # This is typically used once during setup
-    seed_db_if_needed()
 
-  
 
 # ===========================9
 # Context Processor for Year
@@ -779,8 +775,6 @@ def patient_records():
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
 
-appointments = Appointment.query.join(MedicalRecord).filter(
-    Appointment.status != "Completed"
-).all()
+
 
 
