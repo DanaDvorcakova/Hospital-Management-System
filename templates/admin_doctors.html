@@ -59,29 +59,4 @@
 {% set query_params = { 'search': request.args.get('search', '') } %}
 {% include 'components/pagination.html' %}
 
-<!-- Clear Audit Log Modal -->
-<div class="modal fade" id="clearAuditLogModal" tabindex="-1" aria-labelledby="clearAuditLogLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="clearAuditLogLabel">Clear Audit Log</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Warning message about deleting all logs -->
-        Are you sure you want to <strong>delete all audit log entries</strong>?<br>
-        This action <strong>cannot be undone</strong>.
-      </div>
-      <div class="modal-footer">
-         <!-- Cancel button to close the modal -->
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <!-- Form to submit the action of clearing the audit log -->
-        <form method="POST" action="{{ url_for('clear_audit_log') }}">
-            <button type="submit" class="btn btn-danger">Clear Audit Log</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 {% endblock %}

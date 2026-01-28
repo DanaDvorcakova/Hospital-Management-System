@@ -23,43 +23,70 @@
             <tr>
                 <th>ID</th>
                 <th>Patient</th>
-                <th>Date</th>    
+                <th>Date</th> 
+                <th>Time</th>  
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for appt in appointments %}
-            <tr>
-                <td>{{ appt.id }}</td>
-                <td>{{ appt.patient.name }}</td>
-                <td>{{ appt.date.strftime('%Y-%m-%d') }}</td>
-                <td>
-                    {% if appt.status == "Completed" %}
-                        <span class="badge bg-success">Completed</span>
-                    {% else %}
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    {% endif %}
-                </td>
-          <td class="action-column">
-    {% if not appt.medical_record %}
-        <a href="{{ url_for('add_record', appointment_id=appt.id) }}" class="btn btn-primary btn-sm">Add Record</a>
-    {% else %}
-        <a href="{{ url_for('edit_medical_record', record_id=appt.medical_record.id) }}" class="btn btn-warning btn-sm">Edit</a>
-    {% endif %}
-</td>
-       </tr>
-            {% endfor %}
-      {% endif %}
+ <!-- Loop through each appointment and display in the table -->
+{% for appt in appointments.items %}
+<tr>
+    <td>{{ appt.id }}</td>
+    <td>{{ appt.patient.name }}</td>
+    <td>{{ appt.date.strftime('%Y-%m-%d') }}</td>
+    <td>{{ appt.time.strftime("%H:%M") if appt.time else '-' }}</td>
+
+    <!-- STATUS COLUMN -->
+    <td>
+        <!-- Show 'Upcoming' if the appointment is in the future -->
+        {% if appt.date > current_date %}
+            <span class="badge bg-info">Upcoming</span>
+
+        {% elif appt.medical_record %}
+        <!-- Show 'Completed' if the appointment has a medical record -->
+            <span class="badge bg-success">Completed</span>
+        <!-- Show 'Pending' if the appointment is neither completed nor upcoming -->
+        {% else %}
+            <span class="badge bg-warning text-dark">Pending</span>
+        {% endif %}
+    </td>
+
+    <!-- ACTIONS COLUMN -->
+    <td class="action-column">
+         <!-- If the appointment is in the future, disable actions -->
+        {% if appt.date > current_date %}
+            <span class="text-muted">No actions</span>
+        <!-- If the appointment has a medical record, show 'Edit' button -->
+        {% else %}
+            {% if appt.medical_record %}
+                <a href="{{ url_for('edit_medical_record', record_id=appt.medical_record.id) }}"
+                   class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+            {% else %}
+            <!-- If no medical record exists, show 'Add Record' button -->
+                <a href="{{ url_for('add_record', appointment_id=appt.id) }}"
+                   class="btn btn-primary btn-sm">
+                    Add Record
+                </a>
+            {% endif %}
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
         </tbody>
     </table>
 
     <!-- Pagination -->
     {% set paginator = appointments %}
     {% set endpoint = 'doctor_appointments' %}
-    {% set query_params = {} %}
+    {% set query_params = {'search': search_value} %}
     {% include 'components/pagination.html' %}
+    
+{% else %}
+    <p>No appointments found for today. Please check back later.</p>
+{% endif %}
 
 {% endblock %}
-
-

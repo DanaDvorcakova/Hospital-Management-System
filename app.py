@@ -5,6 +5,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, time, date
 
+
 # ===========================
 # Flask App Setup
 # ===========================
@@ -26,6 +27,8 @@ def seed_db_if_needed():
             role="admin")
         db.session.add(admin)
         db.session.commit()
+
+        
 
     # --- Doctors ---
     doctors_to_seed = [
@@ -71,6 +74,8 @@ def seed_db_if_needed():
                 phone=pat["phone"])
             db.session.add(patient)
             db.session.commit()
+
+            
 
     # --- Appointments ---
     if Appointment.query.count() == 0:
@@ -212,7 +217,6 @@ def validate_appointment_date_time(date_str, time_str):
         return False, "Invalid time format."
     
     return True, None
-
 
 # ===========================
 # AUTH ROUTES
@@ -396,7 +400,6 @@ def delete_patient(patient_id):
     appointments = Appointment.query.filter_by(patient_id=patient.id).all()  
     has_records = False
 
-
     for appt in appointments:
         record = MedicalRecord.query.filter_by(appointment_id=appt.id).first()
         if record:
@@ -416,7 +419,6 @@ def delete_patient(patient_id):
 
     flash("Patient deleted successfully", "success")
     return redirect(url_for("admin_patients"))
-
 
 @app.route("/admin/audit")
 @role_required("admin")
@@ -473,7 +475,10 @@ def doctor_appointments():
     appointments = Appointment.query.filter_by(
         doctor_id=doctor.id).order_by(Appointment.date.desc()).paginate(page=page, per_page=10, error_out=False)
 
-    return render_template("doctor_appointments.html", appointments=appointments,doctor=doctor)
+    # Get today's date to compare with appointment date
+    current_date = datetime.today().date()
+   
+    return render_template("doctor_appointments.html", appointments=appointments, doctor=doctor, current_date=current_date)
 
 @app.route("/doctor/records")
 @role_required("doctor")
@@ -497,22 +502,29 @@ def doctor_records():
 @role_required("doctor")
 def add_record(appointment_id):
     doctor = get_user("doctor")
-    """Adds a medical record for a specific appointment."""
     appointment = Appointment.query.get_or_404(appointment_id)
+
     if request.method == "POST":
+        # Add the medical record
         record = MedicalRecord(
             appointment_id=appointment.id,
             diagnosis=request.form["diagnosis"],
             prescription=request.form["prescription"])
         
+        # Update the status of the appointment to "Completed"
         appointment.status = "Completed"
+
         db.session.add(record)
         db.session.commit()
 
-        log_action(User.query.get(session["user_id"]), f"Added medical record for appointment {appointment.id}")
+        log_action(  
+            User.query.get(session["user_id"]),
+            f"Added medical record for appointment {appointment.id}")
         flash("Medical record added successfully", "success")
         return redirect(url_for("doctor_appointments"))
+
     return render_template("record_new.html", appointment=appointment)
+
 
 @app.route("/doctor/record/edit/<int:record_id>", methods=["GET", "POST"])
 @role_required("doctor")
@@ -520,17 +532,18 @@ def edit_medical_record(record_id):
     """Edits an existing medical record."""
     doctor = get_user("doctor")
     record = MedicalRecord.query.get_or_404(record_id)
-    if request.method == "POST":
 
+    if request.method == "POST":
         record.diagnosis = request.form["diagnosis"]
         record.prescription = request.form["prescription"]
         db.session.commit()
-  
-        log_action(User.query.get(session["user_id"]), f"Updated medical record for appointment {record.appointment_id}")
 
+        log_action(User.query.get(session["user_id"]), f"Updated medical record for appointment {record.appointment_id}")
         flash("Medical record updated successfully", "success")
         return redirect(url_for("doctor_appointments"))
+
     return render_template("record_edit.html", record=record)
+
 
 @app.route("/doctor/patients", methods=["GET", "POST"])
 @role_required("doctor")
@@ -562,7 +575,6 @@ def doctor_view_patient(patient_id):
 # -------------------------------------------------
 # PATIENT ROUTES
 # -------------------------------------------------
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Handles patient registration."""
@@ -632,12 +644,15 @@ def book_appointment():
         appt_date = datetime.strptime(request.form["date"], "%Y-%m-%d").date()
         appt_time = datetime.strptime(request.form["time"], "%H:%M").time()
 
+        # Check if the appointment is in the future (if so, set status to 'Pending')
+        status = "Pending" if appt_date >= date.today() else "Completed"
+
         appointment = Appointment(
             patient_id=patient.id,
             doctor_id=int(request.form["doctor_id"]),
             date=appt_date,
             time=appt_time,
-            status="Pending")
+            status=status)
         
         db.session.add(appointment)
         db.session.commit()
@@ -649,13 +664,33 @@ def book_appointment():
     
     return render_template("appointment_new.html", doctors=doctors, today=today_str)
 
+
 @app.route("/patient/appointments")
 @role_required("patient")
 def patient_appointments():
     """Displays a paginated list of the patient's appointments."""
-    patient = get_user("patient")  
-    appointments = paginate_query(Appointment.query.filter_by(patient_id=patient.id), 1)  
-    return render_template("patient_appointments.html", appointments=appointments, patient=patient)
+    patient = get_user("patient")
+    page = request.args.get('page', 1, type=int)
+
+    # Get today's date to compare with appointment date
+    current_date = datetime.today().date()
+    current_time = datetime.now().time()  # This is the current time (e.g., 14:45)
+
+    # Update appointments that are past due to "Completed"
+    past_appointments = Appointment.query.filter(
+        Appointment.patient_id == patient.id,
+        Appointment.date < current_date,
+        Appointment.status == "Pending"  # Only update appointments that are pending
+    ).all()
+
+    # Commit changes to the database
+    db.session.commit()
+
+    # Get appointments for the patient
+    appointments = Appointment.query.filter_by(
+        patient_id=patient.id).order_by(Appointment.date.desc()).paginate(page=page, per_page=10, error_out=False)
+
+    return render_template("patient_appointments.html", appointments=appointments, patient=patient, current_date=current_date, current_time=current_time)
 
 @app.route("/patient/appointment/edit/<int:appointment_id>", methods=["GET", "POST"])
 @role_required("patient")
@@ -691,6 +726,7 @@ def edit_appointment(appointment_id):
     return render_template(
         "appointment_edit.html", appointment=appointment, doctors=doctors, today=today_str)
 
+
 @app.route("/patient/appointment/cancel/<int:appointment_id>")
 @role_required("patient")
 def cancel_appointment(appointment_id):
@@ -709,6 +745,8 @@ def cancel_appointment(appointment_id):
     
     flash("Appointment canceled successfully", "success")
     return redirect(url_for("patient_appointments"))
+
+
 
 @app.route("/patient/records")
 @role_required("patient")
@@ -741,7 +779,24 @@ def patient_records():
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
 
+appointments = Appointment.query.join(MedicalRecord).filter(
+    Appointment.status != "Completed"
+).all()
 
 
 
+# Find appointments that don't have a MedicalRecord and their status is not "Completed"
+appointments = Appointment.query.join(MedicalRecord, isouter=True).filter(
+    MedicalRecord.id == None,  # No associated medical record
+    Appointment.status != "Completed"  # Only those that are not already completed
+).all()
 
+# Change the status of these appointments to "Completed"
+for appt in appointments:
+    appt.status = "Completed"
+
+# Commit the changes to the database
+db.session.commit()
+
+# Print out how many records were updated
+print(f"Fixed {len(appointments)} appointments without a medical record.")

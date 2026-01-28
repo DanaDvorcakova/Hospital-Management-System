@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("All scripts loaded!");
 
     // Initialize Table Search for various tables
-    enableTableSearch('doctorSearch', [1, 2, 3]); // Doctor table search
-    enableTableSearch('patientSearch', [1, 2, 3, 4]); // Patient table search
-    enableTableSearch('appointmentsSearch', [0, 1, 2, 3, 4]); // Appointments table search
-    enableTableSearch('recordsSearch', [0, 1, 2, 3, 4]); // Medical record search
-    enableTableSearch('auditLogSearch', [0, 1, 2, 3, 4]); // Audit Log search
+enableTableSearch('doctorSearch', [1, 2, 3]);
+enableTableSearch('patientSearch', [1, 2, 3, 4]);
+enableTableSearch('appointmentsSearch', [0, 1, 2, 3]);
+enableTableSearch('recordsSearch', [0, 1, 2, 3, 4]);
+enableTableSearch('auditLogSearch', [0, 1, 2, 3, 4]);
 
     // Initialize Appointment Chart
     loadAppointmentChart();
@@ -18,69 +18,43 @@ document.addEventListener('DOMContentLoaded', function () {
 // ==========================
 // Table Search Function 
 // ==========================
-function enableTableSearch(inputId, columnIndexes, excludeIndexes = []) {
+function enableTableSearch(inputId, columnIndexes) {
     const searchInput = document.getElementById(inputId);
     if (!searchInput) return;
 
-    const rows = document.querySelectorAll('table tbody tr');
+    // Find the closest table AFTER the search bar
+    const table = searchInput.closest(".row")
+        ?.nextElementSibling
+        ?.querySelector("table") 
+        || document.querySelector("table");
 
-    searchInput.addEventListener('keyup', function () {
-        const filter = this.value.toLowerCase();
+    if (!table) {
+        console.warn("No table found for search:", inputId);
+        return;
+    }
+
+    const rows = table.querySelectorAll("tbody tr");
+
+    searchInput.addEventListener("input", function () {
+        const filter = this.value.toLowerCase().trim();
 
         rows.forEach(row => {
-            let matchFound = false;
+            let match = false;
 
             columnIndexes.forEach(index => {
                 const cell = row.cells[index];
                 if (!cell) return;
 
-                // Skip the columns that are in the excludeIndexes array
-                if (excludeIndexes.includes(index)) return;
-
-                // Store the visible text (ignore HTML tags) for searching
-                let visibleText = cell.textContent.trim();
-                if (!cell.dataset.original) {
-                    cell.dataset.original = visibleText;  
-                }
-
-                const originalText = cell.dataset.original.toLowerCase();
-
-                if (filter && originalText.includes(filter)) {
-                    matchFound = true;
-
-                    // Highlight the text content without affecting links or HTML
-                    const highlightedText = originalText.replace(
-                        new RegExp(`(${filter})`, 'gi'),
-                        '<mark>$1</mark>'
-                    );
-
-                    // Preserve any existing HTML elements (e.g., links) and only update the text content
-                    const buttonHTML = Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
-                    const textContentWithoutButtons = visibleText.replace(buttonHTML, '').trim();
-
-                    // Update the cell content with highlighted text and reattach the buttons (links)
-                    cell.innerHTML = textContentWithoutButtons.replace(
-                        new RegExp(`(${filter})`, 'gi'),
-                        '<mark>$1</mark>'
-                    ) + buttonHTML; 
-                } else {
-                    // Reset to the original text and reattach buttons
-                    if (cell.classList.contains('action-column')) {
-                        // Hide the text in the action column, keep only the button
-                        cell.innerHTML = buttonHTML; 
-                    } else {
-                        // Reset to the original text and reattach links
-                        cell.innerHTML = cell.dataset.original + Array.from(cell.children).filter(child => child.tagName === 'A').map(button => button.outerHTML).join('');
-                    }
+                const text = cell.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    match = true;
                 }
             });
 
-            // Hide row if no match is found, or show it if match is found
-            row.style.display = matchFound || filter === '' ? '' : 'none';
+            row.style.display = match || filter === "" ? "" : "none";
         });
     });
 }
-   
 
 // ==========================
 // Table Filter Script
@@ -89,10 +63,10 @@ let activeFilters = {}; // Global active filters for all columns
 
 function applyFilters() {
     const rows = document.querySelectorAll('#auditTable tbody tr');
-    
+
     rows.forEach(row => {
         let shouldDisplay = true;
-        
+
         // Check each filter for every row
         Object.keys(activeFilters).forEach(colIndex => {
             const cell = row.cells[colIndex];
@@ -123,7 +97,7 @@ function createDropdown(th, colIndex) {
     th.classList.add("open");
     const dropdown = document.createElement("div");
     dropdown.className = "filter-dropdown";
-    dropdown.addEventListener("click", e => e.stopPropagation()); 
+    dropdown.addEventListener("click", e => e.stopPropagation()); // Prevent closing when clicking inside dropdown
 
     const thRect = th.getBoundingClientRect();
     dropdown.style.minWidth = thRect.width + "px";
@@ -231,7 +205,7 @@ function closeAllDropdowns(exceptTh = null) {
 // Add event listener for table header filter click
 document.querySelectorAll('.filterable').forEach(th => {
     th.addEventListener('click', function (event) {
-        event.stopPropagation(); 
+        event.stopPropagation();
         const colIndex = parseInt(th.dataset.column);
         createDropdown(th, colIndex);
     });
@@ -244,7 +218,6 @@ document.addEventListener("click", (event) => {
     }
 });
 
-
 // ==========================
 // Appointment Chart Script
 // ==========================
@@ -252,7 +225,7 @@ let appointmentChart = null;
 
 function loadAppointmentChart() {
     console.log("Appointment Chart script loaded!");
-    
+
     const statsEl = document.getElementById('stats-data');
     const canvas = document.getElementById('appointmentChart');
     const wrapper = document.querySelector('.chart-wrapper');
@@ -323,7 +296,7 @@ function loadAppointmentChart() {
                 }
             }
         },
-        plugins: getChartDataLabelsPlugin() 
+        plugins: getChartDataLabelsPlugin()
     });
 }
 
@@ -427,5 +400,4 @@ document.addEventListener("DOMContentLoaded", () => {
         { inputId: "recordsSearch", text: "Type to search records" }
     ]);
 });
-
 
