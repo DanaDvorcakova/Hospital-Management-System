@@ -784,19 +784,3 @@ appointments = Appointment.query.join(MedicalRecord).filter(
 ).all()
 
 
-
-# Find appointments that don't have a MedicalRecord and their status is not "Completed"
-appointments = Appointment.query.join(MedicalRecord, isouter=True).filter(
-    MedicalRecord.id == None,  # No associated medical record
-    Appointment.status != "Completed"  # Only those that are not already completed
-).all()
-
-# Change the status of these appointments to "Completed"
-for appt in appointments:
-    appt.status = "Completed"
-
-# Commit the changes to the database
-db.session.commit()
-
-# Print out how many records were updated
-print(f"Fixed {len(appointments)} appointments without a medical record.")
