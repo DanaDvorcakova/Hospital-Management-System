@@ -75,18 +75,25 @@
         {% endif %}
     </td>
 </tr>
-{% endfor %}
+    {% else %}
+        <!-- If no records, display a message -->
+        <tr>
+            <td colspan="6" class="text-center text-muted">No medical records found.</td>
+        </tr>
+        {% endfor %}
+
         </tbody>
     </table>
-
+   
     <!-- Pagination -->
     {% set paginator = appointments %}
     {% set endpoint = 'doctor_appointments' %}
     {% set query_params = {'search': search_value} %}
     {% include 'components/pagination.html' %}
     
-{% else %}
+ {% else %}
     <p>No appointments found for today. Please check back later.</p>
 {% endif %}
+
 
 {% endblock %}

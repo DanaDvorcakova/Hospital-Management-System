@@ -45,6 +45,8 @@
 {% set query_params = { 'search': request.args.get('search', '') } %}
 {% include 'components/pagination.html' %}
 
+{% else %}
+    <p>You don't have any Medical Records.</p>
 {% endif %}
 
 {% endblock %}
